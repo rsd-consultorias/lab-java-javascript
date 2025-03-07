@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="br.com.rsdconsultoria.AppTest" time="0.062" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="br.com.rsdconsultoria.AppTest" time="0.039" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -12,7 +12,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="BR"/>
     <property name="sun.boot.library.path" value="/usr/local/Cellar/openjdk/21/libexec/openjdk.jdk/Contents/Home/lib"/>
-    <property name="sun.java.command" value="/Users/rafaeldias/repositories/java/lab-java-javascript/rd-interpreter/target/surefire/surefirebooter-20250306210833720_3.jar /Users/rafaeldias/repositories/java/lab-java-javascript/rd-interpreter/target/surefire 2025-03-06T21-08-33_518-jvmRun1 surefire-20250306210833720_1tmp surefire_0-20250306210833720_2tmp"/>
+    <property name="sun.java.command" value="/Users/rafaeldias/repositories/java/lab-java-javascript/rd-interpreter/target/surefire/surefirebooter-20250307075954449_3.jar /Users/rafaeldias/repositories/java/lab-java-javascript/rd-interpreter/target/surefire 2025-03-07T07-59-54_260-jvmRun1 surefire-20250307075954449_1tmp surefire_0-20250307075954449_2tmp"/>
     <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/Users/rafaeldias/repositories/java/lab-java-javascript/rd-interpreter/target/test-classes:/Users/rafaeldias/repositories/java/lab-java-javascript/rd-interpreter/target/classes:/Users/rafaeldias/repositories/java/lab-java-javascript/rd-contracts/target/classes:/Users/rafaeldias/.m2/repository/org/graalvm/sdk/graal-sdk/21.3.0/graal-sdk-21.3.0.jar:/Users/rafaeldias/.m2/repository/org/graalvm/js/js/21.3.0/js-21.3.0.jar:/Users/rafaeldias/.m2/repository/org/graalvm/regex/regex/21.3.0/regex-21.3.0.jar:/Users/rafaeldias/.m2/repository/org/graalvm/truffle/truffle-api/21.3.0/truffle-api-21.3.0.jar:/Users/rafaeldias/.m2/repository/com/ibm/icu/icu4j/69.1/icu4j-69.1.jar:/Users/rafaeldias/.m2/repository/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar:/Users/rafaeldias/.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar:"/>
@@ -29,7 +29,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="apple.awt.application.name" value="ForkedBooter"/>
-    <property name="surefire.real.class.path" value="/Users/rafaeldias/repositories/java/lab-java-javascript/rd-interpreter/target/surefire/surefirebooter-20250306210833720_3.jar"/>
+    <property name="surefire.real.class.path" value="/Users/rafaeldias/repositories/java/lab-java-javascript/rd-interpreter/target/surefire/surefirebooter-20250307075954449_3.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.runtime.version" value="21"/>
@@ -58,5 +58,5 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testApp" classname="br.com.rsdconsultoria.AppTest" time="0.006"/>
+  <testcase name="testApp" classname="br.com.rsdconsultoria.AppTest" time="0.004"/>
 </testsuite>

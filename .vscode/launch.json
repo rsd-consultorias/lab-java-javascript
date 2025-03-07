@@ -11,6 +11,7 @@
             "mainClass": "br.com.rsdconsultoria.rdSmartContracts.RdSmartContractApplication",
             "projectName": "rd-smart-contract-api",
             "env": {
+                "ENVIRONMENT": "dev",
                 "SCRIPTS_REPOSITORY": "/Users/rafaeldias/repositories/java/lab-java-javascript/"
             }
         }
