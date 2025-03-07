@@ -1,8 +1,0 @@
-/Users/rafaeldias/repositories/java/lab-java-javascript/rd-contracts/src/main/java/br/com/rsdconsultoria/model/Balance.java
-/Users/rafaeldias/repositories/java/lab-java-javascript/rd-contracts/src/main/java/br/com/rsdconsultoria/model/Participant.java
-/Users/rafaeldias/repositories/java/lab-java-javascript/rd-contracts/src/main/java/br/com/rsdconsultoria/model/SmartContract.java
-/Users/rafaeldias/repositories/java/lab-java-javascript/rd-contracts/src/main/java/br/com/rsdconsultoria/utils/AmazonStyleOrderIDGenerator.java
-/Users/rafaeldias/repositories/java/lab-java-javascript/rd-contracts/src/main/java/br/com/rsdconsultoria/utils/AuditLog.java
-/Users/rafaeldias/repositories/java/lab-java-javascript/rd-contracts/src/main/java/br/com/rsdconsultoria/utils/HashUtil.java
-/Users/rafaeldias/repositories/java/lab-java-javascript/rd-contracts/src/main/java/br/com/rsdconsultoria/utils/ScalableUniqueIDGenerator.java
-/Users/rafaeldias/repositories/java/lab-java-javascript/rd-contracts/src/main/java/br/com/rsdconsultoria/utils/SnowflakeIDGenerator.java

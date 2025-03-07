@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ServiceWorkerApplication",
+            "request": "launch",
+            "mainClass": "br.com.rsdconsultoria.worker.ServiceWorkerApplication",
+            "projectName": "rd-service-worker"
+        },
+        {
+            "type": "java",
             "name": "RdSmartContractApplication",
             "request": "launch",
             "mainClass": "br.com.rsdconsultoria.rdSmartContracts.RdSmartContractApplication",

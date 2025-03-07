@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.rsdconsultoria</groupId>
-	<artifactId>rd-smart-contract-api</artifactId>
+	<artifactId>rd-service-worker</artifactId>
 	<version>1.0.1</version>
-	<name>rd-smart-contract-api</name>
-	<description>Backend for RD Smart Contracts</description>
+	<name>rd-service-worker</name>
+	<description>Worker for RD Smart Contracts Services</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -30,7 +30,7 @@
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
-        <dependency>
+        <!-- <dependency>
             <groupId>br.com.rsdconsultoria</groupId>
             <artifactId>rd-interpreter</artifactId>
             <version>1.0.0</version>
@@ -38,22 +38,32 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
+		</dependency> -->
 
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency> -->
+		<dependency>
+			<groupId>org.jobrunr</groupId>
+			<artifactId>jobrunr</artifactId>
+			<version>7.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.17.0</version> <!-- use latest version -->
 		</dependency>
 	</dependencies>
 
-	<build>
+	<!-- <build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-	</build>
+	</build> -->
 
 </project>

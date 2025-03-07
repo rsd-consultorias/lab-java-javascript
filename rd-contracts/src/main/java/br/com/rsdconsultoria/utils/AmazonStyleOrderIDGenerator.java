@@ -18,10 +18,9 @@ public class AmazonStyleOrderIDGenerator {
      *
      * @return Uma string representando o identificador gerado.
      *         Exemplo: "AMZ-20250304144215-X7F2K9".
+     *         // Prefixo (exemplo: "AMZ")
      */
-    public static String generateOrderID() {
-        // Prefixo (exemplo: "AMZ")
-        String prefix = "AMZ";
+    public static String generateOrderID(String prefix) {
 
         // Data no formato ano-mês-dia-hora-minuto-segundo
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
