@@ -14,19 +14,18 @@ public class ScalableUniqueIDGenerator {
 
     /**
      * Gera um identificador único no formato "NAMESPACE-timestamp-randomString".
+     *         // Optional namespace or prefix for contextual differentiation
+     *         String namespace = "SYS"; // Example: "SYS" for system-generated IDs
      *
      * @return Uma string representando o identificador único gerado.
      *         Exemplo: "SYS-1745023987654-AB3F2X8K".
      */
-    public static String generateUniqueID() {
+    public static String generateUniqueID(String namespace) {
         // Timestamp in nanoseconds for high precision and uniqueness
         long timestamp = Instant.now().toEpochMilli();
 
         // Random alphanumeric part (8 characters for compactness)
         String randomPart = generateRandomAlphanumeric(8);
-
-        // Optional namespace or prefix for contextual differentiation
-        String namespace = "SYS"; // Example: "SYS" for system-generated IDs
 
         // Combine all components to form the unique ID
         return String.format("%s-%d-%s", namespace, timestamp, randomPart);

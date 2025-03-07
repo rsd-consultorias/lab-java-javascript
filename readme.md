@@ -114,10 +114,3 @@ Certifique-se de que todas as transações e ações sejam registradas para fins
 ### Passo 5: Testar o Contrato
 Escreva testes unitários para verificar se todas as funcionalidades do contrato estão funcionando conforme esperado. Use a classe de testes criada anteriormente como base e adicione testes específicos para o seu contrato.
 
----
-
-
-
-```bash
-java -jar /Users/rafaeldias/repositories/java/rd-smart-contract/rd-interpreter/target/rd-interpreter-1.0-SNAPSHOT-jar-with-dependencies.jar
-```
