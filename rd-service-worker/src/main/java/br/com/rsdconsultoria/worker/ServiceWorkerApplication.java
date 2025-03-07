@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 import org.jobrunr.configuration.JobRunr;
+import org.jobrunr.dashboard.JobRunrDashboardWebServerConfiguration;
 import org.jobrunr.scheduling.BackgroundJobRequest;
 import org.jobrunr.storage.InMemoryStorageProvider;
 
@@ -15,12 +16,17 @@ public class ServiceWorkerApplication {
         JobRunr
                 .configure()
                 .useStorageProvider(new InMemoryStorageProvider())
-                .useDashboard()
-                .useBackgroundJobServer()
+                .useDashboard(JobRunrDashboardWebServerConfiguration.usingStandardDashboardConfiguration()
+                .andBasicAuthentication("admin", "admin"))
+                .useBackgroundJobServer(1)
                 .initialize();
 
-        BackgroundJobRequest.enqueue(new TesteJob());
-        BackgroundJobRequest.schedule(LocalDateTime.now().plusMinutes(2), new TesteJob());
-        BackgroundJobRequest.scheduleRecurrently(Duration.ofMinutes(2l), new TesteJob());
+        new TesteJob();
+
+        // BackgroundJobRequest.enqueue(new TesteJob());
+        // BackgroundJobRequest.schedule(LocalDateTime.now().plusMinutes(2), new
+        // TesteJob());
+        // BackgroundJobRequest.scheduleRecurrently(Duration.ofSeconds(2l), new
+        // TesteJob());
     }
 }
