@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>POC - Sistema com Macro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/codemirror.min.css">
+    <style>
+        body {
+            background-color: #f5f5f5;
+            color: #32363a;
+            font-family: '72', Arial, sans-serif;
+        }
+
+        h1 {
+            color: #0a6ed1;
+        }
+
+        .toolbar {
+            padding: 10px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #d1d1d1;
+        }
+
+        .toolbar button {
+            background-color: #0a6ed1;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+
+        .toolbar button:hover {
+            background-color: #005bb5;
+        }
+
+        .toolbar button:active {
+            background-color: #004494;
+        }
+
+        .toolbar button img {
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        .CodeMirror {
+            height: 600px;
+            background-color: #ffffff;
+            color: #32363a;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .CodeMirror-cursor {
+            border-left: 1px solid #0a6ed1;
+        }
+
+        .CodeMirror-gutters {
+            background-color: #f5f5f5;
+            border-right: 1px solid #d1d1d1;
+        }
+
+        .CodeMirror-linenumber {
+            color: #32363a;
+        }
+
+        .cm-keyword {
+            color: #d03838;
+        }
+
+        .cm-variable {
+            color: #0a6ed1;
+        }
+
+        .cm-string {
+            color: #2b7a0b;
+        }
+
+        .cm-number {
+            color: #a41e1e;
+        }
+
+        .cm-comment {
+            color: #6a9955;
+        }
+
+        .console {
+            background-color: #f5f5f5;
+            color: #32363a;
+            padding: 10px;
+            border-top: 1px solid #d1d1d1;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        .console .error {
+            color: #d03838;
+        }
+
+        .console .success {
+            color: #2b7a0b;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>POC - Sistema com Macro</h1>
+    <div class="toolbar">
+        <button onclick="compileCode()">
+            <img src="https://www.example.com/compile-icon.png" alt="Compilar" width="16" height="16">
+            Compilar
+        </button>
+        <button onclick="debugCode()">
+            <img src="https://www.example.com/debug-icon.png" alt="Debugar" width="16" height="16">
+            Debugar
+        </button>
+    </div>
+
+    <textarea id="code" name="code">
+
+// Escreva seu código JavaScript aqui...
+let payroll = {
+    total: 0,
+    taxes: 0,
+    total2: 0
+};
+
+employees.forEach(employee => {
+    if (employee.salary < 15000) {
+    payroll.total += employee.salary;
+    } else {
+    payroll.total2 += employee.salary;
+    }
+});
+
+let total = employees.map(x => x.salary).reduce((x, y) => x + y);
+console.log(JSON.stringify(payroll));
+
+output.total = total;
+// ....</textarea>
+    <div class="console" id="consoleLog"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tern/0.24.3/tern.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/addon/hint/show-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/addon/hint/javascript-hint.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/addon/hint/show-hint.min.css">
+    <script>
+        var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+            lineNumbers: true,
+            mode: "javascript",
+            extraKeys: { "Ctrl-Space": "autocomplete" },
+            gutters: ["CodeMirror-lint-markers", "breakpoints"],
+            lint: true,
+            theme: "default"
+        });
+
+        var server = new CodeMirror.TernServer({ defs: [CodeMirror.tern.javascript] });
+        editor.on("cursorActivity", function () {
+            server.updateArgHints(editor);
+        });
+        CodeMirror.on(editor, "keyup", function (cm, event) {
+            if (!cm.state.completionActive && event.keyCode !== 32) {
+                CodeMirror.commands.autocomplete(cm, null, { completeSingle: true });
+            }
+        });
+
+        function addVariable(name) {
+            server.addDef({
+                "!name": name,
+                "global": {
+                    "vars": {
+                        [name]: {
+                            "!type": "?"
+                        }
+                    }
+                }
+            });
+        }
+
+        addVariable("output");
+        addVariable("employees");
+        addVariable("calculateTaxes");
+
+        function customAutocomplete(editor) {
+            return function (cm, options) {
+                var cursor = cm.getCursor();
+                var token = cm.getTokenAt(cursor);
+                var result = [];
+                var variables = ["employees", "calculateTaxes", "output"];
+
+                variables.forEach(function (variable) {
+                    if (variable.startsWith(token.string)) {
+                        result.push({
+                            text: variable,
+                            displayText: variable
+                        });
+                    }
+                });
+
+                return {
+                    list: result,
+                    from: CodeMirror.Pos(cursor.line, token.start),
+                    to: CodeMirror.Pos(cursor.line, token.end)
+                };
+            };
+        }
+
+        CodeMirror.registerHelper("hint", "javascript", customAutocomplete(editor));
+
+        var breakpoints = {};
+
+        function addBreakpoint(line) {
+            breakpoints[line] = true;
+            editor.setGutterMarker(line, "breakpoints", makeMarker());
+        }
+
+        function removeBreakpoint(line) {
+            breakpoints[line] = false;
+            editor.setGutterMarker(line, "breakpoints", null);
+        }
+
+        function makeMarker() {
+            var marker = document.createElement("div");
+            marker.style.color = "#0a6ed1";
+            marker.innerHTML = "●";
+            return marker;
+        }
+
+        editor.on("gutterClick", function (cm, n) {
+            var info = cm.lineInfo(n);
+            if (info.gutterMarkers) {
+                removeBreakpoint(n);
+            } else {
+                addBreakpoint(n);
+            }
+        });
+
+        function compileCode() {
+            var code = editor.getValue();
+            var consoleLog = document.getElementById("consoleLog");
+            consoleLog.innerHTML = ''; // Clear previous logs
+            try {
+                let defaultCode = "function multiply(a, b) {return a * b;} var output = {}; let employees = [{salary: 1000, workingHours: 220}, {salary: 1000, workingHours: 220}, {salary: 1000, workingHours: 220}, {salary: 1000, workingHours: 220}];";
+                eval(`${defaultCode}\n\r  function execute(params) {\n\r${code}\n\r}\n\r execute({});`);
+                consoleLog.innerHTML = `<div class="success">Código compilado com sucesso!<br />${JSON.stringify(output)}</div>`;
+            } catch (e) {
+                consoleLog.innerHTML = '<div class="error">Erro ao compilar o código: ' + e.message + '</div>';
+                highlightErrorLine(e.lineNumber - 1);
+            }
+        }
+
+        function highlightErrorLine(lineNumber) {
+            editor.addLineClass(lineNumber, "background", "line-error");
+        }
+
+        function debugCode() {
+            var code = editor.getValue().split("\n");
+            var consoleLog = document.getElementById("consoleLog");
+            consoleLog.innerHTML = ''; // Clear previous logs
+
+            async function executeLine(lineNumber) {
+                if (lineNumber >= code.length) {
+                    return;
+                }
+                var line = code[lineNumber];
+                try {
+                    await new Promise((resolve) => setTimeout(resolve, 100)); // Pause for visualization
+                    eval(line);
+                    if (breakpoints[lineNumber]) {
+                        consoleLog.innerHTML += `<div class="success">Breakpoint at line ${lineNumber + 1}: ${line}</div>`;
+                        console.log("Debug:", { line: lineNumber + 1, lineContent: line });
+                        return; // Pause execution at breakpoint
+                    }
+                    executeLine(lineNumber + 1);
+                } catch (e) {
+                    consoleLog.innerHTML += '<div class="error">Erro ao executar o código: ' + e.message + '</div>';
+                    highlightErrorLine(lineNumber);
+                }
+            }
+
+            executeLine(0);
+        }
+    </script>
+
+</body>
+
+</html>

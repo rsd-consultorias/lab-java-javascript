@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>RD Smart Contracts Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/codemirror.min.css">
+    <style id="dynamic-style">
+        /* CSS Atual */
+        body {
+            background-color: #1E1E1E;
+            color: #D4D4D4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        h1 {
+            color: #569CD6;
+        }
+
+        .toolbar {
+            padding: 10px;
+            background-color: #252526;
+            border-bottom: 1px solid #3C3C3C;
+        }
+
+        .toolbar button {
+            background-color: #007ACC;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .toolbar button:hover {
+            background-color: #005A9E;
+        }
+
+        .toolbar button:active {
+            background-color: #003C6B;
+        }
+
+        .toolbar button img {
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        .CodeMirror {
+            height: 600px;
+            background-color: #1E1E1E;
+            color: #D4D4D4;
+            font-size: 16px;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        .CodeMirror-cursor {
+            border-left: 1px solid #A7A7A7;
+        }
+
+        .CodeMirror-gutters {
+            background-color: #252526;
+            border-right: 1px solid #3C3C3C;
+        }
+
+        .CodeMirror-linenumber {
+            color: #858585;
+        }
+
+        .cm-keyword {
+            color: #569CD6;
+        }
+
+        .cm-variable {
+            color: #9CDCFE;
+        }
+
+        .cm-string {
+            color: #CE9178;
+        }
+
+        .cm-number {
+            color: #B5CEA8;
+        }
+
+        .cm-comment {
+            color: #6A9955;
+        }
+
+        .console {
+            background-color: #1E1E1E;
+            color: #D4D4D4;
+            padding: 10px;
+            border-top: 1px solid #3C3C3C;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        .console .error {
+            color: #F44747;
+        }
+
+        .console .success {
+            color: #B5CEA8;
+        }
+    </style>
+    <!-- <style>
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            font-family: 'Arial', sans-serif;
+        }
+        h1 {
+            color: #0070C0;
+        }
+        .toolbar {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #c0c0c0;
+        }
+        .toolbar button {
+            background-color: #0070C0;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 0;
+        }
+        .toolbar button:hover {
+            background-color: #005AAE;
+        }
+        .toolbar button:active {
+            background-color: #004B8C;
+        }
+        .toolbar button img {
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+        .CodeMirror {
+            height: 600px;
+            background-color: #ffffff;
+            color: #000000;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+        }
+        .CodeMirror-cursor {
+            border-left: 1px solid #0070C0;
+        }
+        .CodeMirror-gutters {
+            background-color: #f0f0f0;
+            border-right: 1px solid #c0c0c0;
+        }
+        .CodeMirror-linenumber {
+            color: #000000;
+        }
+        .cm-keyword {
+            color: #0070C0;
+        }
+        .cm-variable {
+            color: #0070C0;
+        }
+        .cm-string {
+            color: #008000;
+        }
+        .cm-number {
+            color: #800000;
+        }
+        .cm-comment {
+            color: #808080;
+        }
+        .console {
+            background-color: #ffffff;
+            color: #000000;
+            padding: 10px;
+            border-top: 1px solid #c0c0c0;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+        }
+        .console .error {
+            color: #ff0000;
+        }
+        .console .success {
+            color: #008000;
+        }
+    </style> -->
+</head>
+
+<body>
+    <h1>RD Smart Contracts Editor</h1>
+    <div class="toolbar">
+        <button onclick="compileCode(false)">
+            <img src="https://www.example.com/compile-icon.png" alt="Compilar" width="16" height="16">
+            Compilar
+        </button>
+        <button onclick="compileCode(true)">
+            <img src="https://www.example.com/compile-icon.png" alt="Compilar" width="16" height="16">
+            Testar
+        </button>
+        <!-- <button onclick="toggleStyle()">Trocar Estilo</button> -->
+    </div>
+    <textarea id="code" name="code">
+function execute(params) {
+  console.log(rdcontracts.getContractId());
+  output.initialAmount = rdcontracts.getBalance().getAmount();
+    
+  let amount = params.amount;
+  rdcontracts.deposit(amount);
+  output.deposits = rdcontracts.getBalance().getAmount();
+    
+  rdcontracts.withdraw(200);
+  output.withdraws = rdcontracts.getBalance().getAmount();
+        
+  output.finalBalance = rdcontracts.getBalance().getAmount();
+}
+
+function test() {
+  execute({amount: 100000});
+}          
+</textarea>
+    <div class="console" id="consoleLog"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tern/0.24.3/tern.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/addon/hint/show-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/addon/hint/javascript-hint.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/addon/hint/show-hint.min.css">
+    <script>
+        var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+            lineNumbers: true,
+            mode: "javascript",
+            extraKeys: { "Ctrl-Space": "autocomplete" },
+            gutters: ["CodeMirror-lint-markers"],
+            lint: true,
+            theme: "dracula",
+            indentUnit: 4, // Configura a indentação para 4 espaços
+            tabSize: 4 // Configura o tamanho do tab para 4 espaços
+        });
+
+        // Variáveis personalizadas
+        var customVariables = [
+            { text: "rd.", displayText: "rd" },
+            { text: "getContractId()", displayText: "UUID getContractId()" },
+            { text: "getBalance()", displayText: "Balance getBalance()" },
+            { text: "deposit(amount)", displayText: "void deposit(BigDecimal amount)" },
+            { text: "withdraw(amount)", displayText: "void withdraw(BigDecimal amount)" },
+            { text: "transfer(recipient, amount)", displayText: "void transfer(SmartContract recipient, BigDecimal amount)" },
+            { text: "getOwner()", displayText: "Participant getOwner()" },
+            { text: "addAuthorizedUser(user)", displayText: "void addAuthorizedUser(String user)" },
+            { text: "removeAuthorizedUser(user)", displayText: "void removeAuthorizedUser(String user)" },
+            { text: "isUserAuthorized(user)", displayText: "boolean isUserAuthorized(String user)" },
+            { text: "issueTokens(user, amount)", displayText: "void issueTokens(String user, BigDecimal amount)" },
+            { text: "burnTokens(user, amount)", displayText: "void burnTokens(String user, BigDecimal amount)" },
+            { text: "getTokenBalance(user)", displayText: "Balance getTokenBalance(String user)" },
+            { text: "vote(publicKey, proposal, vote)", displayText: "void vote(String publicKey, String proposal, boolean vote)" },
+            { text: "distributeRewards(user, rewardAmount)", displayText: "void distributeRewards(String user, BigDecimal rewardAmount)" },
+            { text: "addAuditLog(action, amount, participant)", displayText: "void addAuditLog(String action, BigDecimal amount, String participant)" },
+            { text: "getAuditLog()", displayText: "Map<String, String> getAuditLog()" },
+            { text: "penalize(user, penaltyAmount)", displayText: "void penalize(String user, BigDecimal penaltyAmount)" },
+            { text: "depositCollateral(user, collateralAmount)", displayText: "void depositCollateral(String user, BigDecimal collateralAmount)" },
+            { text: "swapTokens(user, amountFrom, amountTo)", displayText: "void swapTokens(String user, BigDecimal amountFrom, BigDecimal amountTo)" },
+            { text: "migrate(newContractAddress)", displayText: "void migrate(String newContractAddress)" },
+        ];
+        var foundVariables = []
+
+        function extractVariables(code) {
+            // Expressão regular para corresponder a declarações de variáveis
+            var regex = /\b(var|let|const)\s+([a-zA-Z_$][0-9a-zA-Z_$]*)/g;
+            var match;
+            foundVariables = [];
+
+            // Percorre o código e encontra todas as variáveis
+            while ((match = regex.exec(code)) !== null) {
+                if (customVariables.filter(x => x.text == match[2]).length == 0) {
+                    foundVariables.push({ text: match[2], displayText: ` ${match[2]}` });
+                }
+            }
+        }
+
+        CodeMirror.registerHelper("hint", "javascript", function (editor) {
+            var cursor = editor.getCursor();
+            var token = editor.getTokenAt(cursor);
+            var start = token.string;
+
+            // Filtra as variáveis personalizadas com base na entrada atual
+            let lists = customVariables.concat(foundVariables);
+
+            var list = lists.filter(function (item) {
+                console.log(JSON.stringify(item))
+                return item.text.startsWith(start);
+            });
+
+            return {
+                list: list.length ? list.sort(x => x.text) : lists.sort(x => x.text),
+                from: CodeMirror.Pos(cursor.line, token.start),
+                to: CodeMirror.Pos(cursor.line, token.end)
+            };
+        });
+
+        function compileCode(runTest) {
+            var code = editor.getValue();
+            var consoleLog = document.getElementById("consoleLog");
+            consoleLog.innerHTML = ''; // Clear previous logs
+            try {
+                let defaultCode = `
+var __amount__ = 0;
+var __auditLog__ = [];
+var __signatures__ = {};
+var __votes__ = {};
+var __totalVotes__ = 0;
+
+const balance = { getAmount: () => __amount__ };
+
+const rd = {
+    getContractId: () => '5ccd3a8e-6837-46a3-b69f-972797d19bed',
+
+    deposit: (amount) => {
+        __amount__ += amount;
+        __auditLog__.push({ action: 'deposit', amount: amount });
+    },
+
+    withdraw: (amount) => {
+        __amount__ -= amount;
+        __auditLog__.push({ action: 'withdraw', amount: amount });
+    },
+
+    getBalance: () => balance,
+
+    getAuditLog: () => __auditLog__,
+
+    isUserAuthorized: (user) => true,
+
+    signContract: (participant, contractData) => {
+        // Simula a assinatura do contrato
+        const signature = participant.signContract(contractData);
+        __signatures__[participant.getPublicKey()] = signature;
+        __auditLog__.push({ action: 'signContract', participant: participant.getPublicKey() });
+    },
+
+    verifySignature: (participant, contractData) => {
+        // Simula a verificação da assinatura
+        const signature = __signatures__[participant.getPublicKey()];
+        return participant.verifySignature(contractData, signature);
+    },
+
+    calculateContractHash: (contractData) => {
+        // Simula o cálculo do hash do contrato
+        const crypto = require('crypto');
+        const hash = crypto.createHash('sha256').update(contractData).digest('base64');
+        return hash;
+    },
+
+    addDeliverable: (deliverable) => {
+        // Simula a adição de uma entrega de serviço
+        __auditLog__.push({ action: 'addDeliverable', deliverable: deliverable });
+    },
+
+    completeDeliverable: (deliverable) => {
+        // Simula a conclusão de uma entrega de serviço
+        __auditLog__.push({ action: 'completeDeliverable', deliverable: deliverable });
+    },
+
+    releasePayment: (amount, recipientPublicKey) => {
+        // Simula a liberação de pagamento após a conclusão da entrega
+        __amount__ -= amount;
+        __auditLog__.push({ action: 'releasePayment', amount: amount, recipient: recipientPublicKey });
+    },
+
+    vote: (proposal, vote, participant) => {
+        // Simula a votação em uma proposta
+        __votes__[participant.getPublicKey()] = vote;
+        __totalVotes__++;
+
+        if (__totalVotes__ === Object.keys(__signatures__).length) {
+            let votesFor = 0;
+            let votesAgainst = 0;
+            for (let key in __votes__) {
+                if (__votes__[key]) {
+                    votesFor++;
+                } else {
+                    votesAgainst++;
+                }
+            }
+            const result = votesFor > votesAgainst ? 'approved' : 'rejected';
+            __auditLog__.push({ action: 'vote', proposal: proposal, result: result });
+            __votes__ = {};
+            __totalVotes__ = 0;
+        } else {
+            __auditLog__.push({ action: 'voteRecorded', participant: participant.getPublicKey() });
+        }
+    }
+};
+
+                var output = {}; function multiply(a, b) {return a * b;} var output = {}; let employees = [{salary: 1000, workingHours: 220}, {salary: 1000, workingHours: 220}, {salary: 1000, workingHours: 220}, {salary: 1000, workingHours: 220}];`;
+                if (runTest) {
+                    eval(`${defaultCode}\n\r${code}\n\rtest()\r\n`);
+                } else {
+                    eval(`${defaultCode}\n\r${code}\n\r`);
+                }
+
+                extractVariables(code);
+                consoleLog.innerHTML = `<div class="success">${new Date().toISOString()} Código compilado com sucesso!<br />${JSON.stringify(output)}</div>`;
+            } catch (e) {
+                consoleLog.innerHTML = `<div class="error">${new Date().toISOString()} Erro ao compilar o código: ${e.message}</div>`;
+            }
+        }
+        var currentStyle = 0;
+        function toggleStyle() {
+            var styles = [
+                /* CSS Atual */
+                `
+        body {
+            background-color: #1E1E1E;
+            color: #D4D4D4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        h1 {
+            color: #569CD6;
+        }
+        .toolbar {
+            padding: 10px;
+            background-color: #252526;
+            border-bottom: 1px solid #3C3C3C;
+        }
+        .toolbar button {
+            background-color: #007ACC;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .toolbar button:hover {
+            background-color: #005A9E;
+        }
+        .toolbar button:active {
+            background-color: #003C6B;
+        }
+        .toolbar button img {
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+        .CodeMirror {
+            height: 600px;
+            background-color: #1E1E1E;
+            color: #D4D4D4;
+            font-size: 14px;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        .CodeMirror-cursor {
+            border-left: 1px solid #A7A7A7;
+        }
+        .CodeMirror-gutters {
+            background-color: #252526;
+            border-right: 1px solid #3C3C3C;
+        }
+        .CodeMirror-linenumber {
+            color: #858585;
+        }
+        .cm-keyword {
+            color: #569CD6;
+        }
+        .cm-variable {
+            color: #9CDCFE;
+        }
+        .cm-string {
+            color: #CE9178;
+        }
+        .cm-number {
+            color: #B5CEA8;
+        }
+        .cm-comment {
+            color: #6A9955;
+        }
+        .console {
+            background-color: #1E1E1E;
+            color: #D4D4D4;
+            padding: 10px;
+            border-top: 1px solid #3C3C3C;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        .console .error {
+            color: #F44747;
+        }
+        .console .success {
+            color: #B5CEA8;
+        }
+        `,
+                /* CSS SAP Fiori */
+                `
+        body {
+            background-color: #f5f5f5;
+            color: #32363a;
+            font-family: '72', Arial, sans-serif;
+        }
+        h1 {
+            color: #0a6ed1;
+        }
+        .toolbar {
+            padding: 10px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #d1d1d1;
+        }
+        .toolbar button {
+            background-color: #0a6ed1;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+        .toolbar button:hover {
+            background-color: #005bb5;
+        }
+        .toolbar button:active {
+            background-color: #004494;
+        }
+        .toolbar button img {
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+        .CodeMirror {
+            height: 600px;
+            background-color: #ffffff;
+            color: #32363a;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+        }
+        .CodeMirror-cursor {
+            border-left: 1px solid #0a6ed1;
+        }
+        .CodeMirror-gutters {
+            background-color: #f5f5f5;
+            border-right: 1px solid #d1d1d1;
+        }
+        .CodeMirror-linenumber {
+            color: #32363a;
+        }
+        .cm-keyword {
+            color: #d03838;
+        }
+        .cm-variable {
+            color: #0a6ed1;
+        }
+        .cm-string {
+            color: #2b7a0b;
+        }
+        .cm-number {
+            color: #a41e1e;
+        }
+        .cm-comment {
+            color: #6a9955;
+        }
+        .console {
+            background-color: #f5f5f5;
+            color: #32363a;
+            padding: 10px;
+            border-top: 1px solid #d1d1d1;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+        }
+        .console .error {
+            color: #d03838;
+        }
+        .console .success {
+            color: #2b7a0b;
+        }
+        `,
+                /* CSS SAP R3 */
+                `
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            font-family: 'Arial', sans-serif;
+        }
+        h1 {
+            color: #0070C0;
+        }
+        .toolbar {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #c0c0c0;
+        }
+        .toolbar button {
+            background-color: #0070C0;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 0;
+        }
+        .toolbar button:hover {
+            background-color: #005AAE;
+        }
+        .toolbar button:active {
+            background-color: #004B8C;
+        }
+        .toolbar button img {
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+        .CodeMirror {
+            height: 600px;
+            background-color: #ffffff;
+            color: #000000;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+        }
+        .CodeMirror-cursor {
+            border-left: 1px solid #0070C0;
+        }
+        .CodeMirror-gutters {
+            background-color: #f0f0f0;
+            border-right: 1px solid #c0c0c0;
+        }
+        .CodeMirror-linenumber {
+            color: #000000;
+        }
+        .cm-keyword {
+            color: #0070C0;
+        }
+        .cm-variable {
+            color: #0070C0;
+        }
+        .cm-string {
+            color: #008000;
+        }
+        .cm-number {
+            color: #800000;
+        }
+        .cm-comment {
+            color: #808080;
+        }
+        .console {
+            background-color: #ffffff;
+            color: #000000;
+            padding: 10px;
+            border-top: 1px solid #c0c0c0;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+        }
+        .console .error {
+            color: #ff0000;
+        }
+        .console .success {
+            color: #008000;
+        }
+        `
+            ];
+
+            currentStyle = (currentStyle + 1) % styles.length;
+            document.getElementById("dynamic-style").innerHTML = styles[currentStyle];
+        }
+
+    </script>
+</body>
+
+</html>
