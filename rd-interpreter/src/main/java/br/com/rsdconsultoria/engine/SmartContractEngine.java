@@ -100,6 +100,7 @@ public class SmartContractEngine {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return result;
     }
 

@@ -4,7 +4,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +22,6 @@ import br.com.rsdconsultoria.utils.ScalableUniqueIDGenerator;
 @RequestMapping("/rest/process/v1")
 public class ProcessContractController {
 
-    @Autowired
-    private ScriptEngine engine;
-
     @Value("${rd.scripts.repository}")
     private String SCRIPTS_REPOSITORY;
 
@@ -41,6 +37,7 @@ public class ProcessContractController {
     @PostMapping("/{contractId}")
     public Object post(@PathVariable("contractId") String contractId,
             @RequestBody ContractProcessRequest contractRequest) throws Exception {
+        ScriptEngine engine = new ScriptEngine();
         engine.setParameters(contractRequest.getParameters());
 
         if (contractRequest.getScript() != null) {

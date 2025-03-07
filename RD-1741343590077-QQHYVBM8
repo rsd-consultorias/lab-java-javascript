@@ -1,0 +1,5 @@
+function execute(params) {
+ params = JSON.parse(params);
+ output.id = rd.getContractId();
+ output.id2 = rd.getContractId();
+}
